@@ -42,7 +42,7 @@ class SessionWrapper(requests.Session):
         return rsp
 
     def meta_refresh_destination(self, response):
-        soup = BeautifulSoup(response.content)
+        soup = BeautifulSoup(response.content.decode('utf-8', errors='replace'))
         metas = soup.find_all('meta')
         for meta in metas:
             if meta.parent.name == 'noscript':
