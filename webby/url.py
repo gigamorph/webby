@@ -1,3 +1,4 @@
+import logging
 import re
 from urlparse import urlparse
 
@@ -9,8 +10,14 @@ class URL:
     @staticmethod
     def subdomains(addr, min_size=0, reverse=False):
         try:
-            url = urlparse.urlparse(addr)
-            subs = url.hostname.split('.')
+            url = urlparse(addr)
+            m = re.match(r'(.*):\d+$', url.netloc)
+            if m == None:
+                host = url.netloc
+            else:
+                host = m.group(1)
+            
+            subs = host.split('.')
 
             for i in range(min_size - len(subs)):
                 subs.insert(0, '')
@@ -20,6 +27,7 @@ class URL:
             else:
                 return subs
         except Exception as e:
+            logging.error(e)
             return []
 
     ## Comparator that can be used to sort urls
